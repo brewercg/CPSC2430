@@ -1,0 +1,32 @@
+#include "Browser.h"
+#include <iostream>
+
+using namespace std;
+
+Browser::Browser()
+{
+  rows = 800;
+  columns = 600;
+
+}
+
+void Browser::resize(int row, int col)
+{
+  rows = row;
+  columns = col;
+}
+
+void Browser::displaySize()
+{
+  cout << "Current Size : " << getRows() << " x " << getCols() << "\n";
+}
+
+int Browser::getRows()
+{
+  return this->rows;
+}
+
+int Browser::getCols()
+{
+  return this->columns;
+}

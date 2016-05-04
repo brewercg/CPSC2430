@@ -1,0 +1,87 @@
+/*
+ * CPSC 2430 - Data Structures
+ * Spring 2016
+ * Initial version of this file was created by Tribelhorn, Ben on 9/25/13
+ *
+ * Description: Programming Assignment 1 ***Complete the description of this assignment ***
+ *
+ * Students Name: Cody Brewer
+ * Date: 4/14/2016
+ */
+
+#include "Browser.h"
+
+using namespace std;
+
+/*
+  This is the main client program for the Browser program. It simply calls the function that will load a given html file
+*/
+
+int main()
+{
+  Browser myBrowser;
+
+  //  myBrowser.loadHTML("home.html");
+  
+  string command = " ";
+  
+  while(command != "quit"){
+	// clear console screen before re-display
+	cout << string(100, '\n');
+	cout << myBrowser << endl;
+	
+	cin >> command;
+	
+	if(command == "quit"){}
+	else if (command == "file"){
+	  string filename;
+	  cout << "format : fileName.html\n";
+	  cout << "Enter an HTML file name: " << endl;
+	  cin >> filename;
+	  myBrowser.loadHTML(filename);
+	}
+
+	else if (command == "link"){
+	  int linkNumber;
+	  cout << "Enter a link number: " << endl;
+	  cin >> linkNumber;
+      if( cin.fail() || linkNumber == 0 ){
+		cin.clear();
+	  }
+	  else
+		myBrowser.link(linkNumber);
+	}
+
+	else if (command == "next"){
+	  myBrowser.next();
+	}
+
+	else if (command == "previous"){
+	  myBrowser.previous();
+	}
+
+	else if (command == "resize"){
+	  int newRows, newColumns;
+	  cout << "Enter # of Rows: ";
+	  cin >> newRows;
+
+	  // set to default if non-int is entered
+	  if( cin.fail() || newRows == 0 ){
+		cin.clear();
+		newRows = 6;
+	  }
+	  
+	  cout << "Enter # of Columns: ";
+	  cin >> newColumns;
+
+	  // set to default if non-int is entered
+	  if( cin.fail() || newColumns == 0 ){
+		cin.clear();
+		newColumns = 40;
+	  }
+	  
+	  myBrowser.resize(newRows-1, newColumns);
+	}
+  }
+  return 0;
+}

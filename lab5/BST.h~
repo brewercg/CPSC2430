@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class BST{
+
+ public:
+ BST() : myRoot(0) {}
+  bool isEmpty()
+  {
+	if (myRoot == 0)
+	  return true;
+
+	return false;
+  }
+
+ private:
+
+  class BinNode {
+  public:
+	T data;
+	BinNode* left;
+	BinNode* right;
+  BinNode() : left(0), right(0) {}
+  BinNode(T item) : data(item), left(0), right(0) {}
+  }; //end of BinNode
+
+  typedef BinNode* BinNodePtr;
+
+  BinNodePtr myRoot;
+
+};
+
+
+  
