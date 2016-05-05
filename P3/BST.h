@@ -245,7 +245,7 @@ void BST<T>::remove(const T& item){
 
 	//handle removing root node
 	if(currentNode == myRoot){
-	  myRoot = previousNode->right;
+	  myRoot = myRoot->right;
 	  delete currentNode;
 	}
 	
