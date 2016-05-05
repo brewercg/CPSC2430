@@ -7,6 +7,21 @@
 
 using namespace std;
 
+/*
+  Templated Binary Search Tree
+  Stores values of type T in BST form.
+  Linked Implementation. 
+  Provides non-recursive insertion and removal,
+  multiple traversal modes, and recursive search.
+
+  Does not automatically re-balance. Is not
+  guarenteed to be complete or balanced.
+  Does not accept duplicate values.
+
+  Removal of a node with children will result
+  in the next-highest value node taking the
+  place of the node that was removed. 
+*/
 template <typename T>
 class BST{
 
@@ -56,32 +71,6 @@ ostream& operator<< (ostream &out, const BST<T> &tree){
   return out;
 }
 
-// Overloaded node comparison operator
-template <typename T>
-bool operator< (const typename BST<T>::BinNode &node1,
-				const typename BST<T>::BinNode &node2)
-{
-  return (node1.data < node2.data);
-}
-
-
-// Overloaded node comparison operator
-template <typename T>
-bool operator> (const typename BST<T>::BinNode &node1,
-				const typename BST<T>::BinNode &node2)
-{
-  return (node1.data > node2.data);
-}
-
-// Overloaded node comparison operator
-template <typename T>
-bool operator== (const typename BST<T>::BinNode &node1,
-				 const typename BST<T>::BinNode &node2)
-{
-  return (node1.data == node2.data);
-}
-
-
 /*
   Copy Constructor
   Pre: A tree exists to be copied
@@ -126,6 +115,7 @@ bool BST<T>::empty()
 /*
   Recursively searches the tree for the given item.
   Returns true if the item is found, false otherwise.
+  
   Pre: Tree Exists
   Post: Result returned, tree is not modified
 */
@@ -137,9 +127,11 @@ bool BST<T>::search(const T& item){
 /*
   Creates a new node containing the given item and inserts
   it into the tree at the appropriate location. Non-recursive.
+  
   Pre:Tree exists
   Post:The given item has been inserted into the tree in
-       the proper location. 
+  the proper location. An error message is generated if
+  the item is already in the tree. 
 */
 template <typename T>
 void BST<T>::insert(const T& item){
@@ -157,125 +149,172 @@ void BST<T>::insert(const T& item){
 	while(!finished){
 
 	  // add to empty right
-	  if( (newNode > currentNode) && (currentNode->right == 0))
+	  if( (newNode->data > currentNode->data) && (currentNode->right == 0))
 		{
 		  currentNode->right = newNode;
 		  finished = true;
 		}
 	  //add to empty left
-	  else if( (newNode <= currentNode) && (currentNode->left == 0))
+	  else if( (newNode->data < currentNode->data) && (currentNode->left == 0))
 		{
 		  currentNode->left = newNode;
 		  finished = true;
 		}
 
 	  //go left
-	  else if( newNode < currentNode)
+	  else if( newNode->data < currentNode->data)
 		currentNode = currentNode->left;
 
 	  //go right
-	  else if(newNode > currentNode)
-		currentNOde = currentNode->right;
+	  else if(newNode->data > currentNode->data)
+		currentNode = currentNode->right;
 
 	  //duplicate value
 	  else{
-		newNode->left = currentNode->left;
-		currentNode->left = newNode;
+		cerr << "Duplicate item, insert not performed!" << endl;
 		finished = true;
 	  }
 	}
   }
 }
+
 /*
   Removes the given item from the tree. Non recursive.
+
   Pre:Tree exists
   Post:Item is removed from tree, if present.
-
-  TODO:FIND OUT IF SINGLE OR MULTIPLE REMOVE REQUIRED
 */
 template <typename T>
 void BST<T>::remove(const T& item){
 
   //can't remove from empty tree
   if ( empty() ){
-	cerr << "Can't remove from empty tree." << endl;
+	cerr << "Can't remove from empty tree!" << endl;
 	return;
   }
   
-  BinNodePointer currentNode = myRoot;
+  BinNodePtr currentNode = myRoot; //node to be removed
+  BinNodePtr previousNode = 0; //parent of currentNode
 
-  // ***Removing Root Node ***
-  // root will be replaced by next highest value
-  if(myRoot->data == item){
+  //tracks which direction to move to reach currentNode
+  //from previousNode. True if right, false if left
+  bool lastMoveRight = false; 
 
-	//root was highest value in tree
-	if(myRoot->right == 0){
-	  myRoot = myRoot->left;
-	  delete currentNode;
-	}
-
-	//root->right is next highest value in tree
-	else if(myRoot->right->left == 0){
-	  currentNode = myRoot->right;
-	  currentNode->left = myRoot->left;
-	  delete myRoot;
-	  myRoot = currentNode;
-	}
-	
-	//some other value is next largest
-	else{
-	  
-	  //find next largest value in tree that is not root.
-	  currentNode = myRoot->right;
-	  BinNodePointer previousNode = myRoot;
-	  
-	  while(currentNode->left != 0){
-		previousNode = currentNode;
-		currentNode = currentNode->left;
-	  }
-
-	  //move next largest value to root, delete original root
-	  currentNode->left  = myRoot->left;
-	  currentNode->right = myRoot->right;
-	  previousNode->left = 0;
-	  delete myRoot;
-	  myRoot = currentNode;
-	}
-  }
-
-  
-  //***Removing Non-root Node***
-
-  //find node to be removed
-  BinNodePointer previousNode = myRoot;
-  bool lastMove = false; //false = left, true = right
-  
-  while( (currentNode->data != item) && (currentNode != 0) ){
+  //find the item to be removed
+  while( currentNode != 0 && currentNode->data != item ){
 	if(item > currentNode->data){
 	  previousNode = currentNode;
 	  currentNode = currentNode->right;
-	  lastMove = true;
+	  lastMoveRight = true;
 	}
-	else{
+	else if(item < currentNode->data){
 	  previousNode = currentNode;
 	  currentNode = currentNode->left;
-	  lastMove = false;
+	  lastMoveRight = false;
 	}
   }
 
-  //item was not in tree
-  if(currentNode == 0)
+  //item not found, display error and return
+  if(currentNode == 0){
+	cerr << "Item not found, cannot remove!" << endl;
 	return;
+  }
 
-  //item was in tree; remove it
+  //item found, remove it
 
-  //TODO: remove non-root node once found
-  /*possibly re-use root removal algo, refactor so it works the
-	same for root or non-root removal. Probably necessary because
-	the non-root removal still requires that the next highest
-	value replaces the removed node (for cases where non-root
-	node has children) */
+  //case: currentNode has no children
+  if(currentNode->left == 0 && currentNode->right == 0){
 
+	//handle removing root node
+	if(currentNode == myRoot){
+	  myRoot = 0;
+	  delete currentNode;
+	}
+	else if(lastMoveRight){
+	  previousNode->right = 0;
+	  delete currentNode;
+	}
+	else{
+	  previousNode->left = 0;
+	  delete currentNode;
+	}
+  }
+
+  //case: currentNode has right child only
+  else if(currentNode->left == 0){
+
+	//handle removing root node
+	if(currentNode == myRoot){
+	  myRoot = previousNode->right;
+	  delete currentNode;
+	}
+	
+	else if(lastMoveRight){
+	  previousNode->right = currentNode->right;
+	  delete currentNode;
+	}
+	else{
+	  previousNode->left = currentNode->right;
+	  delete currentNode;
+	}
+  }
+
+  //case: currentNode has left child only
+  else if(currentNode->right == 0){
+
+	//handle removing root node
+	if(currentNode == myRoot){
+	  myRoot = myRoot->left;
+	  delete currentNode;
+	}
+	else if(lastMoveRight){
+	  previousNode->right = currentNode->left;
+	  delete currentNode;
+	}
+	else{
+	  previousNode->left = currentNode->left;
+	  delete currentNode;
+	}
+  }
+
+  //case: currentNode has 2 children
+  else{
+
+	//find next highest value in tree
+	BinNodePtr nextHighest = currentNode->right;
+	BinNodePtr nextHparent = currentNode;
+	while(nextHighest->left != 0){
+	  nextHparent = nextHighest;
+	  nextHighest = nextHighest->left;
+	}
+
+	//handle removing root node
+	if(currentNode == myRoot){
+	  myRoot = nextHighest;
+	}
+	
+	else{
+	  //link currentNode's parent to nextHighest
+	  if(lastMoveRight)
+		previousNode->right = nextHighest;
+	  else
+		previousNode->left = nextHighest;
+	}
+	
+	//link nextHighest to currentNode's left subtree
+	nextHighest->left = currentNode->left;
+
+	//ensure nextHparent doesn't link back up the tree
+	//and that currentNode's right subtree isn't lost
+	if(nextHparent != currentNode){
+	  nextHparent->left = nextHighest->right;
+	  nextHighest->right = currentNode->right;
+	}
+	
+	delete currentNode;	
+  }
+}
+ 
 /*
   Returns the level of the tree on which the given item is stored.
   Returns -1 if the item is not present in the tree. Starts with
@@ -312,7 +351,10 @@ void BST<T>::levelTraversal(ostream& out){}
   Post:Contents of tree are streamed out in order of traversal.
 */
 template <typename T>
-void BST<T>::recursivePreorder(ostream& out){}
+void BST<T>::recursivePreorder(ostream& out){
+  
+}
+
 
 /*
   Non-recursive preorder traversal of tree. Contents are streamed
