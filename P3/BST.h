@@ -62,7 +62,14 @@ class BST{
 
   BinNodePtr myRoot; //root node of tree
 
+  //recursive function to help with search function
+  bool searchHelper(BinNodePtr root, const T& item);
+  int recursiveLvlHelper(BinNodePtr root, const T& item);
+  int heightHelper(BinNodePtr root);
+  void recPreHelper(BinNodePtr root, ostream& out);
 }; //END BST CLASS DEFINITION
+
+
 
 // Overloaded output operator
 template <typename T>
@@ -86,7 +93,7 @@ BST<T>::BST(const BST& orig){}
 */
 template<typename T>
 BST<T>::~BST<T>(){
-
+  
 }
 
 /*
@@ -95,7 +102,13 @@ BST<T>::~BST<T>(){
   Post: LHS is a deep copy of the RHS tree. LHS is returned after copying.
  */
 template<typename T>
-BST<T>& BST<T>::operator=(const BST& orig){return *this;} //overloaded assignment operator
+BST<T>& BST<T>::operator=(const BST& orig){
+
+  
+  
+  return *this;
+
+}
 
 
 /*
@@ -121,6 +134,24 @@ bool BST<T>::empty()
 */
 template <typename T>
 bool BST<T>::search(const T& item){
+  return searchHelper(myRoot, item);
+}
+
+/*
+  Helper for search() function
+*/
+template <typename T>
+bool BST<T>::searchHelper(BinNodePtr root, const T& item){
+
+  if(root == NULL)
+	return false;
+  if(root->data == item)
+	return true;
+  else if(item > root->data)
+	return searchHelper(root->right, item);
+  else if(item < root->data)
+	return searchHelper(root->left , item);
+  
   return false;
 }
 
@@ -180,6 +211,8 @@ void BST<T>::insert(const T& item){
 
 /*
   Removes the given item from the tree. Non recursive.
+  If the removed item was not a leaf, it is replaced by
+  the next highest value item in the tree. 
 
   Pre:Tree exists
   Post:Item is removed from tree, if present.
@@ -226,55 +259,50 @@ void BST<T>::remove(const T& item){
   if(currentNode->left == 0 && currentNode->right == 0){
 
 	//handle removing root node
-	if(currentNode == myRoot){
+	if(currentNode == myRoot)
 	  myRoot = 0;
-	  delete currentNode;
-	}
-	else if(lastMoveRight){
+
+	//set appropriate parent link to 0
+	else if(lastMoveRight)
 	  previousNode->right = 0;
-	  delete currentNode;
-	}
-	else{
+	else
 	  previousNode->left = 0;
-	  delete currentNode;
-	}
+
+	//remove item
+	delete currentNode;
   }
 
   //case: currentNode has right child only
   else if(currentNode->left == 0){
 
 	//handle removing root node
-	if(currentNode == myRoot){
+	if(currentNode == myRoot)
 	  myRoot = myRoot->right;
-	  delete currentNode;
-	}
-	
-	else if(lastMoveRight){
+
+	//redirect appropriate parent link
+	else if(lastMoveRight)
 	  previousNode->right = currentNode->right;
-	  delete currentNode;
-	}
-	else{
+	else
 	  previousNode->left = currentNode->right;
-	  delete currentNode;
-	}
+
+	//remove item
+	delete currentNode;
   }
 
   //case: currentNode has left child only
   else if(currentNode->right == 0){
 
 	//handle removing root node
-	if(currentNode == myRoot){
+	if(currentNode == myRoot)
 	  myRoot = myRoot->left;
-	  delete currentNode;
-	}
-	else if(lastMoveRight){
+
+	//redirect appropriate parent link
+	else if(lastMoveRight)
 	  previousNode->right = currentNode->left;
-	  delete currentNode;
-	}
-	else{
+	else
 	  previousNode->left = currentNode->left;
-	  delete currentNode;
-	}
+	
+	delete currentNode;
   }
 
   //case: currentNode has 2 children
@@ -289,12 +317,11 @@ void BST<T>::remove(const T& item){
 	}
 
 	//handle removing root node
-	if(currentNode == myRoot){
+	if(currentNode == myRoot)
 	  myRoot = nextHighest;
-	}
 	
 	else{
-	  //link currentNode's parent to nextHighest
+	  //redirect appropriate parent link
 	  if(lastMoveRight)
 		previousNode->right = nextHighest;
 	  else
@@ -310,7 +337,8 @@ void BST<T>::remove(const T& item){
 	  nextHparent->left = nextHighest->right;
 	  nextHighest->right = currentNode->right;
 	}
-	
+
+	//remove item
 	delete currentNode;	
   }
 }
@@ -318,12 +346,41 @@ void BST<T>::remove(const T& item){
 /*
   Returns the level of the tree on which the given item is stored.
   Returns -1 if the item is not present in the tree. Starts with
-  the root node as level 0. Recursive.
+  the myRoot node as level 0. Recursive.
   Pre:Tree exists
   Post:Item's level is returned, if present. Returns -1 otherwise
 */
 template <typename T>
-int BST<T>::recursiveLevel(const T& item){return -1;}
+int BST<T>::recursiveLevel(const T& item){
+  return recursiveLvlHelper(myRoot, item);
+}
+
+template <typename T>
+int BST<T>::recursiveLvlHelper(BinNodePtr root, const T& item){
+  if(root == NULL)
+	return -1;
+  if(root->data == item)
+	return 0;
+
+  else if(item > root->data){
+	int right = recursiveLvlHelper(root->right, item);
+
+	if(right == -1)
+	  return -1;
+	
+	return right + 1;
+  }
+  
+  else if(item < root->data){
+	int left = recursiveLvlHelper(root->left, item);
+
+	if(left == -1)
+	  return -1;
+  
+	return left + 1;
+  }
+  return -1;
+}
 
 /*
   Returns the level of the tree on which the given item is stored.
@@ -333,7 +390,36 @@ int BST<T>::recursiveLevel(const T& item){return -1;}
   Post:Item's level is returned, if present. Returns -1 otherwise
 */
 template <typename T>
-int BST<T>:: nonrecursiveLevel(const T& item){return -1;}
+int BST<T>:: nonrecursiveLevel(const T& item){
+  if(empty())
+	return -1;
+
+  int level = 0;//track level
+  BinNodePtr currentNode = myRoot;//traverse tree
+
+  //search for item
+  while(currentNode != 0 && currentNode->data != item){
+
+	//look right
+	if(item > currentNode->data){
+	  currentNode = currentNode->right;
+	  ++level;
+	}
+
+	//look left
+	else{
+	  currentNode = currentNode->left;
+	  ++level;
+	}
+  }
+
+  //item not found
+  if(currentNode == 0)
+	return -1;
+
+  //item found
+  return level;
+}
 
 /*
   Traverses the tree top-to-bottom, left-to-right, beginning at
@@ -352,7 +438,17 @@ void BST<T>::levelTraversal(ostream& out){}
 */
 template <typename T>
 void BST<T>::recursivePreorder(ostream& out){
-  
+  recPreHelper(myRoot, out);
+  out << endl;
+}
+
+template <typename T>
+void BST<T>::recPreHelper(BinNodePtr root, ostream& out){
+  if(root != 0){
+	out << root->data << " ";
+	recPreHelper(root->left, out);
+	recPreHelper(root->right, out);
+  }
 }
 
 
@@ -381,5 +477,23 @@ void BST<T>::postorder(ostream& out){}
   Post:Height of tree is returned
 */
 template <typename T>
-int BST<T>::height(){return 0;}
+int BST<T>::height(){
+  return heightHelper(myRoot);
+}
+
+
+/*
+Helper for height
+*/
+template <typename T>
+int BST<T>::heightHelper(BinNodePtr root){
+  if(root == NULL)
+	return 0;
+
+  else if(heightHelper(root->right) > heightHelper(root->left))
+	return heightHelper(root->right) + 1;
+
+  else
+	return heightHelper(root->left) + 1;
+}
 

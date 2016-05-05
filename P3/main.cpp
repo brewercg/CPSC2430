@@ -23,7 +23,7 @@ int main(){
   //random number generator
   random_device rd;
   mt19937 gen(rd());
-  uniform_int_distribution<> dis(1,200);
+  uniform_int_distribution<> dis(1,99);
 
   
   //generate random numbers to add to intTree
@@ -41,7 +41,6 @@ int main(){
   BST<string> strTree = BST<string>();
   cout << endl;
   
-
   // ***ISEMPTY(empty)TEST***
   cout << "Testing empty" << endl;
   cout << "int";
@@ -49,6 +48,34 @@ int main(){
   cout << "str";
   testEmpty(strTree);
   cout << endl;
+
+  // ***Empty traversal tests***
+  cout << "Empty traversal tests"
+	   << endl
+	   << "---------------------" << endl;
+  strTree.recursivePreorder(cout);
+  cout << endl;
+  
+  // ***empty height test***
+  cout << "Testing empty height" << endl;
+  cout << "strTree height = " << strTree.height()
+	   << endl << endl;
+
+  // ***empty search test***
+  cout << "Testing empty search" << endl;
+  cout << "Found " << testInts[1] << "?";
+  if(intTree.search(testInts[1]))
+	cout << " true";
+  else
+	cout << " false";
+  cout << endl << endl;
+
+  // ***empty level tests***
+  cout << "Testing empty levels" << endl;
+  cout << testInts[3] << " | ";
+  cout << intTree.recursiveLevel(testInts[3]) << " | "
+	   << intTree.nonrecursiveLevel(testInts[3])
+	   << endl << endl;
   
   // ***insert() test***
   cout << "Inserting \"Test\" into strTree" << endl;
@@ -56,6 +83,11 @@ int main(){
   strTree.insert(testStr);
   cout << endl;
 
+  // single-level height test
+  cout << "Testing single-level height" << endl;
+  cout << "strTree height = " << strTree.height()
+	   << endl << endl;
+    
   // ***isEmpty (non-empty) test***
   cout << "Testing non-empty" << endl;
   cout << "str";
@@ -75,15 +107,63 @@ int main(){
 	cout << ", " <<  testInts[i];
 	intTree.insert(testInts[i]);
   }
-  cout << endl;
+  cout << endl << endl;
 
+  // ***Non-empty traversal tests***
+  cout << "Non-empty traversal tests"
+	   << endl
+	   << "---------------------" << endl;
+  cout << "Recursive Preorder: ";
+  intTree.recursivePreorder(cout);
+  cout << endl;
+    
+  // multi-level height test
+  cout << "Testing multi-level height" << endl;
+  cout << "intTree height = " << intTree.height()
+	   << endl << endl;
+  
   // ***isEmpty (multiple values) test***
   cout << "Testing non-empty" << endl;
   cout << "int";
   testEmpty(intTree);
   cout << endl;
 
-  // **remove not found test
+  // ***search tests***
+  cout << "Testing search (value present)" << endl;
+  cout << "Found " << testInts[1] << "?";
+
+  if(intTree.search(testInts[1]))
+	cout << " true";
+  else
+	cout << " false";
+  cout << endl;
+
+  cout << "Testing search (value not present)" << endl;
+  cout << "Found " << 1000 << "?";
+  if(intTree.search(1000))
+	cout << " true";
+  else
+	cout << " false";
+  cout << endl << endl;
+
+  // ***level tests***
+  //values are present
+  cout << "Level testing" << endl;
+  cout << "Value | recursive | non-recursive" << endl;
+  cout << "---------------------------------" << endl;
+  
+  for(int i = 0; i < 20; i+=3){
+	cout << testInts[i] << "    |     ";
+	cout << intTree.recursiveLevel(testInts[i]) << "     |     "
+		 << intTree.nonrecursiveLevel(testInts[i]) << endl;
+  }
+  //value not present
+  cout << "1000  |     "
+	   << intTree.recursiveLevel(1000) << "    |     "
+	   << intTree.nonrecursiveLevel(1000);
+  cout << endl << endl;
+  
+  // **remove not found test**
   cout << "Attempting remove of value that isn't in tree" << endl;
   intTree.remove(1000);
   cout << endl;
