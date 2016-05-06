@@ -4,6 +4,7 @@
   PA3 v.1
 */
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -84,7 +85,9 @@ ostream& operator<< (ostream &out, const BST<T> &tree){
   Post: A deep copy of the tree is created
 */
 template<typename T>
-BST<T>::BST(const BST& orig){}
+BST<T>::BST(const BST& orig){
+  
+}
 
 /*
   Destructor
@@ -428,7 +431,48 @@ int BST<T>:: nonrecursiveLevel(const T& item){
   Post:Contents of tree are sent to streaming output.
 */
 template <typename T>
-void BST<T>::levelTraversal(ostream& out){} 
+void BST<T>::levelTraversal(ostream& out){
+
+  
+  if(empty()){
+	out << "Empty Tree" << endl;
+	return;
+  }
+  
+
+  BinNodePtr currentNode = myRoot;
+  stack<BinNodePtr> currentLevel, nextLevel;
+  
+  currentLevel.push(myRoot);
+
+  //go until tree is fully traversed
+  while( !currentLevel.empty() ){
+	//get child nodes of all current-level nodes
+	while( !currentLevel.empty() ){
+	  currentNode = currentLevel.top();
+
+	  //display current level value
+	  out << currentNode->data << " ";
+
+	  //add child nodes
+	  if(currentNode->left != 0)
+		nextLevel.push(currentNode->left);
+	  if(currentNode->right != 0)
+		nextLevel.push(currentNode->right);
+
+	  currentLevel.pop();
+	}
+
+	//transfer nextLevel into currentLevel, reverse order
+	while(!nextLevel.empty()){
+	  currentLevel.push(nextLevel.top());
+	  nextLevel.pop();
+	}
+  }
+  
+  out << endl;
+  
+} 
 
 /*
   Recursive preorder traversal of tree. Contents are streamed
@@ -442,6 +486,9 @@ void BST<T>::recursivePreorder(ostream& out){
   out << endl;
 }
 
+/*
+  Helper for recursivePreorder()
+*/
 template <typename T>
 void BST<T>::recPreHelper(BinNodePtr root, ostream& out){
   if(root != 0){
@@ -457,18 +504,84 @@ void BST<T>::recPreHelper(BinNodePtr root, ostream& out){
   to given output stream. 
   Pre:Tree exists
   Post:Contents of tree are streamed out in order of traversal.
+  TODO:possibly use a copy and remove leaves as they're printed?
 */
 template <typename T>
-void BST<T>::nonrecursivePreorder(ostream& out){}
+void BST<T>::nonrecursivePreorder(ostream& out){
+
+  if(empty()){
+	out << "Empty Tree" << endl;
+	return;
+  }
+  
+  BinNodePtr currentNode = myRoot;
+  stack<BinNodePtr> nodeStack;
+  nodeStack.push(myRoot);
+  
+  do{
+	//push left and right children to stack
+	if(currentNode->right != 0)
+	  nodeStack.push(currentNode->right);
+	if(currentNode->left != 0)
+	  nodeStack.push(currentNode->left);
+
+	//display current node data
+	out << " " <<  currentNode->data;
+
+	//move to next node
+	currentNode = nodeStack.top();
+	nodeStack.pop();
+	
+  }while(!nodeStack.empty());
+  
+  out << endl;
+}
 
 /*
   Non-recursive postorder traversal of tree. Contents are streamed
   to given output stream. 
   Pre:Tree exists
-  Post:Contents of tree are streamed out in order of traversal.
+  Post:Contents of tree are streamed out as Left-Right-Parent.
 */
 template <typename T>
-void BST<T>::postorder(ostream& out){}
+void BST<T>::postorder(ostream& out){
+  
+  if(empty()){
+	out << "Empty Tree" << endl;
+	return;
+  }
+  
+  BinNodePtr currentNode = myRoot;
+  stack<BinNodePtr> nodeStack;
+  stack<BinNodePtr> valueStack;
+  
+  nodeStack.push(myRoot);
+  
+  do{
+	//push left and right children to stack
+	if(currentNode->left != 0)
+	  nodeStack.push(currentNode->left);
+	if(currentNode->right != 0)
+	  nodeStack.push(currentNode->right);
+	
+	//display current node data
+	//	out << " " <<  currentNode->data;
+
+	//move to next node
+	valueStack.push(currentNode);
+	currentNode = nodeStack.top();
+	nodeStack.pop();
+	
+  }while(!nodeStack.empty());
+
+  //display values in post-order
+  while(!valueStack.empty()){
+	out << valueStack.top()->data << " ";
+	valueStack.pop();
+  }
+  
+  out << endl;
+}
 
 /*
   Recursively determines the height of the tree. The

@@ -113,10 +113,19 @@ int main(){
   cout << "Non-empty traversal tests"
 	   << endl
 	   << "---------------------" << endl;
-  cout << "Recursive Preorder: ";
+  cout << "     Recursive Preorder: ";
   intTree.recursivePreorder(cout);
+
+  cout << " Non-recursive Preorder:";
+  intTree.nonrecursivePreorder(cout);
+
+  cout << "Non-recursive Postorder: ";
+  intTree.postorder(cout);
+
+  cout << "          Top-to-Bottom: ";
+  intTree.levelTraversal(cout);
   cout << endl;
-    
+
   // multi-level height test
   cout << "Testing multi-level height" << endl;
   cout << "intTree height = " << intTree.height()
