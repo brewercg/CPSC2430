@@ -94,9 +94,27 @@ int main(){
   testEmpty(strTree);
   cout << endl;
 
-  // ***Templating behavior has been verified,
-  // proceeding with tests on intTree only.
+  // ***empty copy tests***
 
+  // copy constructor
+  cout << "BST<int> emptyCopy = intTree; " << endl;
+  BST<int> emptyCopy = intTree;
+  cout << "cout << emptyCopy: " << emptyCopy << endl << endl;
+
+  // assignent operator
+  cout << "BST<string> emptyStrCopy; " << endl;
+  BST<string> emptyStrCopy;
+  cout << "emptyStrCopy = strTree; " << endl;
+  emptyStrCopy = strTree;
+  cout << "cout << emptyStrCopy; ";
+  cout << emptyStrCopy << endl;
+
+  cout <<"Templating behavior has been verified," << endl
+	   << " proceeding with tests on intTree only." << endl;
+  // ***destructor test***
+  cout << "Destroying strTree...";
+  strTree.~BST<string>();
+  cout << " done." << endl << endl;
   
   // ***multiple insert test***
   cout << "Inserting ";
@@ -109,10 +127,11 @@ int main(){
   }
   cout << endl << endl;
 
+
   // ***Non-empty traversal tests***
   cout << "Non-empty traversal tests"
 	   << endl
-	   << "---------------------" << endl;
+	   << "-------------------------" << endl;
   cout << "     Recursive Preorder: ";
   intTree.recursivePreorder(cout);
 
@@ -122,10 +141,30 @@ int main(){
   cout << "Non-recursive Postorder: ";
   intTree.postorder(cout);
 
-  cout << "          Top-to-Bottom: ";
+  cout << "  Top-to-Bottom (Level): ";
   intTree.levelTraversal(cout);
+
+  // *** << operator test***
+  cout << "Overloaded << operator : ";
+  cout << intTree;
+  cout << endl;
+  cout << "-------------------------" << endl;
   cout << endl;
 
+  // ***non-empty copy tests***
+
+  // copy constructor
+  cout << "BST<int> intCopy = intTree; " << endl;
+  BST<int> intCopy = intTree;
+  cout << "cout << intCopy: " << intCopy << endl;
+
+  // assignment operator
+  cout << "BST<int> otherCopy;" << endl;
+  BST<int> otherCopy;
+  cout << "otherCopy = intCopy;" << endl;
+  otherCopy = intCopy;
+  cout << "cout << otherCopy; " << otherCopy << endl;
+  
   // multi-level height test
   cout << "Testing multi-level height" << endl;
   cout << "intTree height = " << intTree.height()
@@ -170,7 +209,7 @@ int main(){
   cout << "1000  |     "
 	   << intTree.recursiveLevel(1000) << "    |     "
 	   << intTree.nonrecursiveLevel(1000);
-  cout << endl << endl;
+  cout << endl << "---------------------------------" << endl << endl;
   
   // **remove not found test**
   cout << "Attempting remove of value that isn't in tree" << endl;

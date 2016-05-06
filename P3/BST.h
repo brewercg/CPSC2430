@@ -63,7 +63,8 @@ class BST{
 
   BinNodePtr myRoot; //root node of tree
 
-  //recursive function to help with search function
+  //recursive helper functions
+  void copyHelper(BinNodePtr origRoot, BinNodePtr copyRoot);
   bool searchHelper(BinNodePtr root, const T& item);
   int recursiveLvlHelper(BinNodePtr root, const T& item);
   int heightHelper(BinNodePtr root);
@@ -74,7 +75,7 @@ class BST{
 
 // Overloaded output operator
 template <typename T>
-ostream& operator<< (ostream &out, const BST<T> &tree){
+ostream& operator<< (ostream &out,  BST<T> &tree){
   tree.levelTraversal(out);
   return out;
 }
@@ -86,6 +87,34 @@ ostream& operator<< (ostream &out, const BST<T> &tree){
 */
 template<typename T>
 BST<T>::BST(const BST& orig){
+
+  //copying an empty tree
+  if(orig.myRoot == 0){
+	myRoot = 0;
+	return;
+  }
+
+  //copy root
+  myRoot = new BinNode(orig.myRoot->data);
+
+  //copy rest of tree
+  copyHelper(orig.myRoot, myRoot);
+  
+}
+
+template<typename T>
+void BST<T>::copyHelper(BinNodePtr origRoot, BinNodePtr copyRoot){
+  //copy left subtree
+  if(origRoot->left != 0){
+	copyRoot->left = new BinNode(origRoot->left->data);
+	copyHelper(origRoot->left, copyRoot->left);
+  }
+
+  //copy right subtree
+  if(origRoot->right != 0){
+	copyRoot->right = new BinNode(origRoot->right->data);
+	copyHelper(origRoot->right, copyRoot->right);
+  }
   
 }
 
@@ -96,7 +125,9 @@ BST<T>::BST(const BST& orig){
 */
 template<typename T>
 BST<T>::~BST<T>(){
-  
+  while(!empty()){
+	remove(myRoot->data);
+  }
 }
 
 /*
@@ -107,7 +138,20 @@ BST<T>::~BST<T>(){
 template<typename T>
 BST<T>& BST<T>::operator=(const BST& orig){
 
+  //prevent self-assignment
+  if(myRoot == orig.myRoot)
+	return *this;
   
+  //clear LHS tree before copying
+  while(!empty()){
+	remove(myRoot->data);
+  }
+  
+  //copy root
+  myRoot = new BinNode(orig.myRoot->data);
+
+  //copy rest of tree
+  copyHelper(orig.myRoot, myRoot);
   
   return *this;
 
