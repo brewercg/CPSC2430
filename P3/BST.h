@@ -1,7 +1,7 @@
 /*
   Cody Brewer
-  5/2/2016
-  PA3 v.1
+  5/6/2016
+  PA3 v1.0
 */
 #include <iostream>
 #include <stack>

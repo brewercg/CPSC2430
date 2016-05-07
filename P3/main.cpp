@@ -1,12 +1,13 @@
 /*
   Cody Brewer
-  5/2/2016
-  PA3 v0.1
+  5/6/2016
+  PA3 v1.0
 */
 
 #include "BST.h"
-#include <iostream>
-#include <random>
+#include <stdlib.h> // srand, rand
+#include <time.h>   // time for random seed
+#include <iostream> // streaming
 
 using namespace std;
 
@@ -19,18 +20,13 @@ void testEmpty (BST<string> &tree);
   associated methods. 
  */
 int main(){
-
-  //random number generator
-  random_device rd;
-  mt19937 gen(rd());
-  uniform_int_distribution<> dis(1,99);
-
   
-  //generate random numbers to add to intTree
+  //generate 20 random numbers 0-100 to add to intTree
+  srand( time(NULL) ); //seed RNG
   // ***multiple insert() testing***
   int testInts[20];
   for(int i = 0; i <20; i++){
-	testInts[i] =  dis(gen);
+	testInts[i] =  (rand() % 100);
   }
   
   // ***CONSTRUCTOR TEST***
