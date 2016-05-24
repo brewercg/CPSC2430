@@ -8,14 +8,14 @@
 #include "Heash.h"
 #include <iostream>
 
-using namespace std
+using namespace std;
 
 /*
   Test client for Heash data structure
 */
 
 int main(){
-  cout << "Heash h = Heash()" << endl < endl;
+  cout << "Heash h = Heash()" << endl << endl;
   Heash h = Heash();
 
   cout << "***Empty Heash Tests***" << endl;
@@ -33,7 +33,7 @@ int main(){
 
   //Test:print      Case: empty
   cout << "h.print(): ";
-  cout <<  h.print() << endl;
+  h.print();
 
   //Test:insert     Case: empty
   cout << "h.insert(10): ";
@@ -59,7 +59,7 @@ int main(){
 		
   //Test:print      Case: non-empty
   cout << "h.print(): ";
-  cout <<  h.print() << endl;
+  h.print();
   
   //Test:find       Case: found
   cout << "h.find(10): ";
@@ -83,7 +83,7 @@ int main(){
 
   //Test:print      Case: after add/remove operations
   cout << "h.print(): ";
-  cout <<  h.print() << endl;
+  h.print();
 
   //Deleteing minimum until Heash contains a single value
   cout << "h.deleteMin(): ";
@@ -94,15 +94,15 @@ int main(){
   cout <<  h.deleteMin() << " | Expected: 23" << endl;
 
   cout << "h.print(): ";
-  cout <<  h.print() << endl;
+  h.print();
 	
   //Test:deleteMin  Case: single value
   cout << "h.deleteMin(): ";
   cout <<  h.deleteMin() << " | Expected: 32" << endl;
 
   //Added to test remove function
-  cout << "h.add(30): ";
-  cout <<  h.add(30) << endl;
+  cout << "h.insert(30): ";
+  cout <<  h.insert(30) << endl;
 
   //Test:remove     Case: single value
   cout << "h.remove(30): ";
@@ -119,7 +119,8 @@ int main(){
 
   //heash now contains 13 values
 
-  cout << "Before Re-Hash: " << h.print() << endl;
+  cout << "Before Re-Hash: ";
+  h.print();
 
   cout << "h.insert(15)" << "h.insert(16)" << endl;
 
@@ -128,7 +129,8 @@ int main(){
 
   //heash now contains 15 values
 
-  cout << "After Re-Hash: " << h.print() << endl;
+  cout << "After Re-Hash: ";
+  h.print();
 
   cout << "***End Heash Testing***" << endl;
   

@@ -129,22 +129,15 @@ int Heap::deleteMin(){
 */
 void Heap::remove(heapNode* node){
 
-  // return -1 if empty
-  if(size == 0)
-	return -1;
-
-  //get smallest value from top of heap
-  int smallest = heapArray[1].data;
-
-  //replace smallest value with last value in heap
-  heapArray[1] = heapArray[size];
+  //replace deleted value with last value in heap
+  *node = heapArray[size];
   --size;
 
   //update link in hash table
-  heapArray[1].link->link = &heapArray[1];
+  node->link->link = node;
   
   //percolate down
-  int hole = 1;
+  int hole = ;
   int bigger;
   heapNode temp = heapArray[hole];
 
