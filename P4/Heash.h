@@ -1,8 +1,8 @@
 /*
   Cody Brewer
   CPSC 2430
-  5/24/16
-  v 0.5
+  5/25/16
+  v 1.0
 */
 #ifndef __HEASH_H
 #define __HEASH_H
