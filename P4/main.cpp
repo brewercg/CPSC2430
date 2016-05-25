@@ -1,8 +1,8 @@
 /*
   Cody Brewer
   CPSC 2430
-  5/16/16
-  v 0.1
+  5/24/16
+  v 0.5
 */
 
 #include "Heash.h"
@@ -32,7 +32,7 @@ int main(){
   cout <<  h.deleteMin() << endl;
 
   //Test:print      Case: empty
-  cout << "h.print(): ";
+  cout << "h.print(): " << endl;
   h.print();
 
   //Test:insert     Case: empty
@@ -58,7 +58,7 @@ int main(){
   cout <<  h.insert(1) << endl;
 		
   //Test:print      Case: non-empty
-  cout << "h.print(): ";
+  cout << "h.print(): " << endl;
   h.print();
   
   //Test:find       Case: found
@@ -77,12 +77,16 @@ int main(){
   cout << "h.remove(15): ";
   cout <<  h.remove(15) << endl;
 
+  //Test:print      Case: after add/remove operations
+  cout << "h.print(): " << endl;
+  h.print();
+  
   //Test:deleteMin  Case: non-empty
   cout << "h.deleteMin(): ";
   cout <<  h.deleteMin() << " | Expected: 1" << endl;
 
   //Test:print      Case: after add/remove operations
-  cout << "h.print(): ";
+  cout << "h.print(): " << endl;
   h.print();
 
   //Deleteing minimum until Heash contains a single value
@@ -93,7 +97,7 @@ int main(){
   cout << "h.deleteMin(): ";
   cout <<  h.deleteMin() << " | Expected: 23" << endl;
 
-  cout << "h.print(): ";
+  cout << "h.print(): " << endl;
   h.print();
 	
   //Test:deleteMin  Case: single value
@@ -119,7 +123,7 @@ int main(){
 
   //heash now contains 13 values
 
-  cout << "Before Re-Hash: ";
+  cout << "Before Re-Hash: " << endl;
   h.print();
 
   cout << "h.insert(15)" << "h.insert(16)" << endl;
@@ -129,7 +133,7 @@ int main(){
 
   //heash now contains 15 values
 
-  cout << "After Re-Hash: ";
+  cout << "After Re-Hash: " << endl;
   h.print();
 
   cout << "***End Heash Testing***" << endl;

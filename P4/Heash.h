@@ -1,14 +1,11 @@
 /*
   Cody Brewer
   CPSC 2430
-  5/16/16
-  v 0.1
+  5/24/16
+  v 0.5
 */
 #ifndef __HEASH_H
 #define __HEASH_H
-
-#include "Heap.h"
-#include "Hash.h"
 
 /*
   Combined hash table and heap
@@ -24,10 +21,20 @@ class Heash{
   void print(); // prints the heash
   
  private:
-  Heap heap;
-  Hash hash;
+  struct Node{
+	Node(); //simple constructor
+	int data; //value to store
+	int link; //index in related array
+	bool deleted; //flag for lazy deletion (used in hashTable only)
+  };
+  
+  Node* heap; //minHeap
+  Node* hashTable; //hash table
   int capacity; //current capacity of Heash
   int size; //current number of items in Heash
+
+  int hash(int item); //calculate and return hash value for item
+  void reHash(); //expand heash and re-hash table
 };
 
 #endif
