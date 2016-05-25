@@ -121,10 +121,17 @@ bool Heash::remove(int item){
  */
 bool Heash::insert(int item){
 
+  
   //return false if already in heash
   //TODO:this can be done more efficiently during insert instead of as a separate call!
   if(find(item))
 	return false;
+
+  //re-hash if table is getting full (> 70%)
+  float fullness = float(size) / float(capacity);
+  cout << "fullness : " << fullness << endl;
+  if(fullness > 0.70)
+	reHash();
   
   //add item to hash table
   int hashValue = hash(item);
@@ -321,5 +328,36 @@ int Heash::hash(int item){
   Post: heash is doubled in size and the hash table has been rehashed 
 */
 void Heash::reHash(){
+
+  cout << "ReHashing, current capacity: " << capacity << endl;
   
+  //reset hash table to one of double size
+  delete[] hashTable;
+  hashTable = new Node[capacity * 2];
+
+  int* temp = new int[capacity];
+
+  //copy values into temporary array
+  for(int i = 1; i < size; ++i){
+	temp[i] = heap[i].data;
+  }
+
+  //replace heap with one of double size
+  delete[] heap;
+  heap = new Node[capacity * 2];
+
+  //update capacity
+  capacity *= 2;
+  
+  //re-hash values into new table
+  for(int i = 1; i < size; i++){
+	insert(temp[i]);
+  }
+
+  //clean up temp array
+  delete[] temp;
+
+
+
+  cout << "ReHash complete, new capacity: " << capacity << endl;
 }

@@ -117,7 +117,7 @@ int main(){
 
   //add values to fill to just under 70% full
   //70% full is 14 values, given default capacity of 20
-  for(int i = 1; i < 14 ; ++i ){
+  for(int i = 1; i < 38 ; ++i ){
 	h.insert(i);
   }
 
@@ -126,11 +126,13 @@ int main(){
   cout << "Before Re-Hash: " << endl;
   h.print();
 
-  cout << "h.insert(15)" << "h.insert(16)" << endl;
+  cout << "h.insert(38)" << "h.insert(39)"
+	   << "h.insert(40)" << endl;
 
-  h.insert(15);
-  h.insert(16);
-
+  h.insert(38);
+  h.insert(39);
+  h.insert(40);
+  
   //heash now contains 15 values
 
   cout << "After Re-Hash: " << endl;
