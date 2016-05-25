@@ -5,7 +5,7 @@
   v 0.5
 */
 
-#define DEFAULT_SIZE 53 //due to hash algorithm
+#define DEFAULT_SIZE 20 //due to hash algorithm
 
 #include "Heash.h"
 #include <iostream>
@@ -68,7 +68,7 @@ bool Heash::remove(int item){
   
   //wrap around to beginning and continue search
   if( !itemFound){
-	for(int i = 1; i < hashValue; ++i){
+	for(int i = 0; i < hashValue; ++i){
 	  //item found
 	  if(hashTable[i].data == item && !hashTable[i].deleted){
 		tableLocation = i;
@@ -129,7 +129,6 @@ bool Heash::insert(int item){
 
   //re-hash if table is getting full (> 70%)
   float fullness = float(size) / float(capacity);
-  cout << "fullness : " << fullness << endl;
   if(fullness > 0.70)
 	reHash();
   
@@ -318,7 +317,7 @@ int Heash::hash(int item){
 	cerr << "Invalid value, hash not performed!" << endl;
 	return -1;
   }
-  return (53 % item);
+  return (item % 53);
 }
 
 /*
@@ -338,7 +337,7 @@ void Heash::reHash(){
   int* temp = new int[capacity];
 
   //copy values into temporary array
-  for(int i = 1; i < size; ++i){
+  for(int i = 1; i <= size; ++i){
 	temp[i] = heap[i].data;
   }
 
@@ -348,9 +347,13 @@ void Heash::reHash(){
 
   //update capacity
   capacity *= 2;
+
+  //reset size before adding values back in
+  int previousSize = size;
+  size = 0;
   
   //re-hash values into new table
-  for(int i = 1; i < size; i++){
+  for(int i = 1; i <= previousSize; i++){
 	insert(temp[i]);
   }
 

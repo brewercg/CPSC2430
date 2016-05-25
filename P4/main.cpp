@@ -113,31 +113,34 @@ int main(){
   cout <<  h.remove(30) << endl << endl;
 
   
-  cout << "***Re-Hash Test***" << endl;
-
-  //add values to fill to just under 70% full
-  //70% full is 14 values, given default capacity of 20
-  for(int i = 1; i < 38 ; ++i ){
-	h.insert(i);
+  cout << "***Re-Hash Test***" << endl << endl;
+	
+  //add pseudo-random values to fill to just under 70% full
+  cout << "Adding values for reHash test...";
+  for(int i = 1; i < 16 ; ++i ){
+	h.insert(13*i + 7);
   }
-
-  //heash now contains 13 values
+  cout << " done. " << endl;
+  
 
   cout << "Before Re-Hash: " << endl;
+
+  /*cout << "fullness = size / capacity = "
+	<< float(size) / float(capacity) << endl;*/
   h.print();
 
-  cout << "h.insert(38)" << "h.insert(39)"
-	   << "h.insert(40)" << endl;
-
-  h.insert(38);
-  h.insert(39);
-  h.insert(40);
+  //add single value to trigger re-hash
+  cout << "h.insert(50); " << endl;
+  h.insert(50);
   
-  //heash now contains 15 values
-
+  //rehash should have triggered
   cout << "After Re-Hash: " << endl;
   h.print();
 
+  /*cout << "fullness = size / capacity = "
+	   << float(size) / float(capacity) << endl;
+  */
+  
   cout << "***End Heash Testing***" << endl;
   
   return 1;
